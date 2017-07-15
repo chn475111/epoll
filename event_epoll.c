@@ -46,11 +46,11 @@ ErrP:
     return NULL;
 }
 
-int event_epoll_add(event_epoll_t *h, int fd, unsigned events)
+int event_epoll_add(event_epoll_t *h, int fd, unsigned events, void *data)
 {
     struct epoll_event ev;
 
-    ev.data.ptr = NULL;
+    ev.data.ptr = data;
     ev.data.fd = fd;
     ev.data.u32 = 0;
     ev.data.u64 = 0;
@@ -65,11 +65,11 @@ int event_epoll_add(event_epoll_t *h, int fd, unsigned events)
     return 0;
 }
 
-int event_epoll_mod(event_epoll_t *h, int fd, unsigned events)
+int event_epoll_mod(event_epoll_t *h, int fd, unsigned events, void *data)
 {
     struct epoll_event ev;
 
-    ev.data.ptr = NULL;
+    ev.data.ptr = data;
     ev.data.fd = fd;
     ev.data.u32 = 0;
     ev.data.u64 = 0;
@@ -84,11 +84,11 @@ int event_epoll_mod(event_epoll_t *h, int fd, unsigned events)
     return 0;
 }
 
-int event_epoll_del(event_epoll_t *h, int fd, unsigned events)
+int event_epoll_del(event_epoll_t *h, int fd, unsigned events, void *data)
 {
     struct epoll_event ev;
 
-    ev.data.ptr = NULL;
+    ev.data.ptr = data;
     ev.data.fd = fd;
     ev.data.u32 = 0;
     ev.data.u64 = 0;
@@ -114,17 +114,17 @@ int event_epoll_wait(event_epoll_t *h, int timeout)
     return h->num;
 }
 
-void event_epoll_proc(event_epoll_t *h, event_epoll_cb handler, void *data)
+void event_epoll_proc(event_epoll_t *h, event_epoll_cb handler)
 {
     int i;
     for(i = 0; i < h->num; i++)
     {
         if(handler == NULL)
         {
-            fprintf(stderr, "[%s:%d] %s handler pointer is %p\n", __FILE__, __LINE__, h->name, handler);
+            fprintf(stderr, "[%s:%d] %s epoll handler is %p\n", __FILE__, __LINE__, h->name, handler);
             break;
         }
-        handler(h->evs[i].data.fd, h->evs[i].events, data);
+        handler(h->evs[i].data.fd, h->evs[i].events, h->evs[i].data.ptr);
     }
 }
 
