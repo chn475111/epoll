@@ -9,23 +9,22 @@
 
 #include <sys/epoll.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct event_epoll_s
 {
     int epfd;
     int num;
     int max;
     struct epoll_event *evs;
-    char name[1];
 }event_epoll_t;
 
 typedef void (*event_epoll_cb)(int fd, unsigned events, void *data);
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /// return - null: failed; non-null: succeed
-event_epoll_t *event_epoll_create(char *name, int max);
+event_epoll_t *event_epoll_create(int max);
 
 /// return - -1: failed; 0: succeed
 int event_epoll_add(event_epoll_t *h, int fd, unsigned events, void *data);
@@ -36,7 +35,7 @@ int event_epoll_mod(event_epoll_t *h, int fd, unsigned events, void *data);
 /// return - -1: failed; 0: succeed
 int event_epoll_del(event_epoll_t *h, int fd, unsigned events, void *data);
 
-/// return - -1: failed; 0: succeed
+/// return - -1: failed; 0: timeout; others: succeed
 int event_epoll_wait(event_epoll_t *h, int timeout);
 
 /// return - non-return

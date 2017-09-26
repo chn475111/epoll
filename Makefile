@@ -3,10 +3,9 @@ ifndef CC
 CC = gcc
 endif
 CFLAGS += -g -O0 -Wall -fPIC
-CFLAGS += -D_DEBUG
 CFLAGS += -I./
 LDFLAGS += -L./
-LIBS += -ldl
+LIBS += -lc
 
 .PHONY : all clean
 
